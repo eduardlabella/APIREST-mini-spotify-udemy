@@ -52,7 +52,6 @@ function saveUser(req,res){
   }
 
 }
-
 //Login user
 
 function loginUser(req,res){
