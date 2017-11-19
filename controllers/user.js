@@ -94,6 +94,10 @@ function updateUser(req,res){
   var userId = req.params.id;
   var update = req.body;
 
+  if(userId != req.user.sub){
+    return res.status(500).send({message: 'No tienes permiso para actualizar este usuario'});   
+  }
+
   User.findByIdAndUpdate(userId,update, (err, userUpdated) => {
     if(err){
       res.status(500).send({message: 'Error al actualizar el usuario'});
@@ -103,7 +107,7 @@ function updateUser(req,res){
         res.status(404).send({message: 'No se ha podido actualizar el usuario'});
 
       }else{
-        res.status(200).send({image: file_name, user: userUpdated});
+        res.status(200).send({user: userUpdated});
       }
     }
   });
@@ -125,12 +129,12 @@ function uploadImage(req,res){
     var file_ext = ext_split[1];
 
     if (file_ext == 'JPG' || file_ext == 'png' || file_ext == 'png'|| file_ext == 'jpg') {
-      User.findByIdAndUpdate(userId, {image: file_name},(err,userUpdated) => {
+      User.findByIdAndUpdate(userId, {image: file_name},(err, userUpdated) => {
         if(!userUpdated){
           res.status(404).send({message: 'No se ha podido actualizar el usuario'});
 
         }else{
-          res.status(200).send({user: userUpdated});
+          res.status(200).send({image: file_name, user: userUpdated});
         }
 
       });
